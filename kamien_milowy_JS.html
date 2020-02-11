@@ -7,11 +7,11 @@
     <title>Kamien_Milowy_JS</title>
     <link rel="stylesheet" type="text/css" href="./kamien_milowy_JS.css" />
     <link
-    rel="stylesheet"
-    href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
-    crossorigin="anonymous"
-  />
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
     <script src="./kamien_milowy_JS.js"></script>
     <script
       src="https://code.jquery.com/jquery-3.4.1.min.js"
@@ -21,36 +21,67 @@
   </head>
   <body>
     <section>
-    </br>
-    <input
-    type="text"
-    id="filmInput"
-    placeholder="Start typing film name..."
-    />
-    </br>
-    </br>
-      </section>
-      <section>
-          <table class="table">
-              <thead class="thead-dark">
-                  <tr>
-                      <th>FILM ID</th>
-                      <th>TITLE</th>
-                      <th>PRODUCTION YEAR</th>
-                      <th>RATE VALUE</th>
-                      <th>RAPRESENTATION</th>
-                    </tr>
-                </thead>
-                <tbody class="ranking-table">
-                    <!-- <tr>
-                        <td id="id"></td>
-                        <td id="title"></td>
-                        <td id="year"></td>
-                        <td id="rate"></td>
-                        <td id="image"></td>
-                    </tr> -->
-                </tbody>
-            </table>
-        </section>
-    </body>
+      <div class="container">
+        <div class="row">
+          &nbsp;
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="input-group mb-3">
+              <input
+                type="text"
+                id="searchInput"
+                class="form-control"
+                placeholder="Start typing film name..."
+                aria-label="Film name"
+                aria-describedby="button-addon2"
+              />
+              <div class="input-group-append">
+                <button
+                  class="btn btn-outline-secondary"
+                  type="button"
+                  id="searchButton"
+                >
+                  Search movie
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+    <section>
+      <div id="movieInfo" class="toggleM" style="display:none">
+        <div id="movieInfoData">
+          <div class="container">
+            <div class="jumbotron">
+              <h1 class="display-4" id="movie-title"></h1>
+              <p class="lead" ><strong>Cast:</strong><span id="movie-actors"></span> </p>
+              
+              <p id="movie-description">It uses utility classes for typography and spacing to space content out within the larger container.</p>
+              <!-- <a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a> -->
+            </div>
+            
+
+          </div>
+
+        </div>
+        <button class="btn btn-primary" id="toggle">back</button>
+      </div>
+      <table class="table toggleM">
+        <thead class="thead-dark">
+          <tr>
+            <th>FILM ID</th>
+            <th>TITLE</th>
+            <th>PRODUCTION YEAR</th>
+            <th>RATE VALUE</th>
+            <th>RAPRESENTATION</th>
+          </tr>
+        </thead>
+        <tbody class="ranking-table">
+        </tbody>
+      </table>
+    </section>
+  </body>
 </html>

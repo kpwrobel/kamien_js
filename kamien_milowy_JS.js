@@ -1,3 +1,9 @@
+/*Get https://us-central1-itfighters-movies.cloudfunctions.net/api/movie
+Get https://us-central1-itfighters-movies.cloudfunctions.net/api/movie?name={title}
+Get https://us-central1-itfighters-movies.cloudfunctions.net/api/movie/{id}
+Delete https://us-central1-itfighters-movies.cloudfunctions.net/api/movie/{id}
+Put https://us-central1-itfighters-movies.cloudfunctions.net/api/movie/{id}
+Post https://us-central1-itfighters-movies.cloudfunctions.net/api/movie  */
 
 window.onload = function () {
 
@@ -7,12 +13,24 @@ window.onload = function () {
     //zmienna ma przechowywac wszystkie elementy pobrane z API
     var allFilms = [];
 
+    /**
+     * funkcja zwraca w zaleznosci od title URL do pobrania filmow; 
+     * @param {string} title 
+     */
+    function getMovieUrl(title) {
+        if (title === undefined || title === null || title === '') {
+            return getAllFilms_URL
+        } else {
+            return getAllFilms_URL + '?name=' + title;
+        }
+    }
 
     /**
      * funkcja pobierajaca wszystkie dostepne filmy z API z koncowym wywolaniem tej funkcji
+     * funkcja potrafi wyszukac wskazane w impucie filmy
      */
-    function getAllFilms() {
-        var promise = fetch(getAllFilms_URL)
+    function getAllFilms(title) {
+        var promise = fetch(getMovieUrl(title))
             .then(resp => {
                 if (resp.ok) {
                     return resp.json();
@@ -21,7 +39,7 @@ window.onload = function () {
                 }
             })
             .then(resp => {
-                console.log(resp);
+                //console.log(resp);
                 allFilms = resp;
                 generateTable(resp);
             })
@@ -39,17 +57,20 @@ window.onload = function () {
             });
         return promise;
     };
-    getAllFilms();
+
+    //getAllFilms();
 
     /**
      * pierwsze cwiczeniowe pobranie zawartosci database z API
      */
+
     // $.get(getAllFilms_URL, parameter => {
     //     allFilms = parameter;
     //     console.log(allFilms);
 
     //     generateTable(allFilms);
     // });
+
 
     /* 
     pr.then(resp => {
@@ -61,37 +82,25 @@ window.onload = function () {
     */
 
 
+    /**
+     * funkcja sluzaca do wyswietlania tabeli na podstawie przeslanej tablicy danych
+     * @param {array} parameter 
+     */
     function generateTable(parameter) {
+        filmList.innerHTML = '';
+        console.log(parameter);
+        if (parameter.length === 0) {
+            filmList.innerHTML = 'Brak danych, podaj nazwe filmu i wyszukaj';
+        }
         parameter.forEach(film => {
             //filmList.createElement('tr');
             // let link = document.createElement("a");
             // link.setAttribute("href",'https://us-central1-itfighters-movies.cloudfunctions.net/api/movie/' + film.id)
             let tr = document.createElement('tr');
-            tr.addEventListener('click', () => {
-                fetch(getAllFilms_URL + "/" + film.id)
-                    .then(respense => respense.json())
-                    .then(result => {
-                        // tr.setAttribute("class", "btn btn-primary");
-                        tr.setAttribute("data-toggle", "collapse");
-                        tr.setAttribute("href", "#collapseExample");
-                        console.log(result)
-                            let div1 = document.createElement('div')
-                            div1.setAttribute('class', "collapse")
-                            div1.setAttribute('id', "collapseExample")
-                            let div2 = document.createElement('div')
-                            div2.setAttribute('class', "card card-body")
-                            div2.innerText = result.description;
-                            div1.appendChild(div2);
-                            tr.appendChild(div1);
-                    })
-                    .catch(error => {
-                        console.log('blad pobrania')
-                    });
-            })
+            tr.setAttribute('filmid',film.id);
             let td1 = document.createElement('td');
             td1.innerText = film.id;
             // td1.setAttribute('title', 'https://us-central1-itfighters-movies.cloudfunctions.net/api/movie/' + film.id);
-
             let td2 = document.createElement('td');
             td2.innerText = film.title;
             let td3 = document.createElement('td');
@@ -119,7 +128,6 @@ window.onload = function () {
 
             //let td = document.createElement('<td>'+ film.id +'</td><td>' + film.title + '</td><td>' + film.year + '</td><td>' + film.rate + '</td>');
             tr.appendChild(td1);
-        
             tr.appendChild(td2);
             tr.appendChild(td3);
             tr.appendChild(td4);
@@ -127,17 +135,59 @@ window.onload = function () {
             // link.appendChild(tr);
             filmList.appendChild(tr);
         });
-        //checkDescription();
     };
 
+    function search() {
+        $('#searchButton').click(() => {
+            let val = $('#searchInput').val();
+            //alert('klik search button ' + val);
+            if (val !== undefined && val !== null && val !== '') {
 
-    // function checkDescription (ccc) {
-    //     document.querySelector('tr').addEventListener('click', function(){
-    //         ccc.setAttribute('onmouseover', () => {
+                getAllFilms(val);
+            }
 
-    //         });
-    //     });
-    // }; 
+        });
+        //searchInput.addEventListener('')
+    }
 
+    { }
+
+    function showMovie(){
+        $('#toggle').click(() => { $('.toggleM').toggle(); });
+        $('.ranking-table').on('click', 'tr', function(){ 
+            $('.toggleM').toggle(); 
+            let fid = $(this).attr('filmid');
+            //alert(fid);
+            displayFilmInfo(fid);
+        });
+    };
+        
+        function displayFilmInfo(filmId) {
+                fetch(getAllFilms_URL + "/" + filmId)
+                    .then(respense => respense.json())
+                    .then(result => {
+                        console.log(result);
+                        $('#movie-title').html(result.title);
+                        $('#movie-description').html(result.description);
+                        $('#movie-actors').html(result.cast.join(', '));
+                    })
+                    .catch(error => {
+                        console.log('blad pobrania')
+                    });
+        };
+
+
+    /**
+     * funkcja inicjalizujaca aplikacje, czyli odpalajaca funkcje ladowane przy onload strony;
+     */
+    function __init() {
+        //obluga wyswietlaniua i pobierania filmow do tabeli
+        getAllFilms();
+        //obsluga wyszukiwarki
+        search();
+        //obluga prezentacji filmu
+        showMovie();
+    }
+    __init();
 
 };
